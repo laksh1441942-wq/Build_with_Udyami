@@ -1,4 +1,6 @@
-from flask import render_template, Blueprint
+from flask import render_template, Blueprint, request
+from app.services.register_service import register_user
+
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -12,4 +14,14 @@ def login():
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
-    return render_template('register.html')
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        password = request.form['password']
+        
+        success = register_user(username, email, password)
+        
+        if success:
+            return "User registered successfully!"
+        else:
+            return "Username or email already exists."
