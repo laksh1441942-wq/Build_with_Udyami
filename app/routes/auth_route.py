@@ -1,4 +1,7 @@
-from flask import render_template, Blueprint, request
+from app.extention import bcrypt
+from flask import redirect, render_template, Blueprint, request, url_for
+from flask_login import login_user
+from app.services.login_service import authenticate_user
 from app.services.register_service import register_user
 from app.forms.auth_form import AuthForm, LoginForm
 
@@ -12,21 +15,27 @@ def home():
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    if form.validate_on_submit():
-        # Handle login logic here
-        pass
+    try:
+        user = None
+        if form.validate_on_submit():
+            user = authenticate_user(form.username.data, form.password.data)
+            if user:
+                login_user(user)
+                return redirect(url_for('dashboard.dashboard')) 
+    except Exception as e:
+        print(e)  # Print any exceptions for debugging
+    print(user)  # Print form errors for debugging
     return render_template('login.html', form=form)
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
-        
-        success = register_user(username, email, password)
-        
-        if success:
-            return "User registered successfully!"
-        else:
-            return "Username or email already exists."
+    form = AuthForm()
+    try:
+        if form.validate_on_submit():
+            hashed_password = bcrypt.generate_password_hash(form.password.data)
+            register_user(form.username.data, form.email.data, hashed_password)
+            return redirect(url_for('auth.login'))
+    except Exception as e:
+        print(e)  # Print any exceptions for debugging
+    print(form.errors)  # Print form errors for debugging
+    return render_template('register.html', form=form)

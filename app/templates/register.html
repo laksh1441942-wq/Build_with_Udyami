@@ -10,6 +10,10 @@
     <form action="/register" method="post">
         {{ form.hidden_tag() }}
         <div>
+            {{ form.email.label }}
+            {{ form.email() }}
+        </div>
+        <div>
             {{ form.username.label }}
             {{ form.username() }}
         </div>
@@ -19,5 +23,6 @@
         </div>
         {{ form.submit() }}
     </form>
+    <a href="/login">Already have an account? Login here</a>
 </body>
 </html>
