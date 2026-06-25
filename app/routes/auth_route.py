@@ -1,5 +1,6 @@
 from flask import render_template, Blueprint, request
 from app.services.register_service import register_user
+from app.forms.auth_form import AuthForm, LoginForm
 
 
 auth_bp = Blueprint('auth', __name__)
@@ -10,7 +11,11 @@ def home():
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html')
+    form = LoginForm()
+    if form.validate_on_submit():
+        # Handle login logic here
+        pass
+    return render_template('login.html', form=form)
 
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
