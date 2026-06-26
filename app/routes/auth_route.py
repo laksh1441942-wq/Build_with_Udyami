@@ -39,3 +39,9 @@ def register():
         print(e)  # Print any exceptions for debugging
     print(form.errors)  # Print form errors for debugging
     return render_template('register.html', form=form)
+
+@auth_bp.route('/logout')
+def logout():
+    from flask_login import logout_user
+    logout_user()
+    return redirect(url_for('auth.login'))

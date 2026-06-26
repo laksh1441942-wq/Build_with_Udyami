@@ -9,3 +9,4 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
 
+    resumes = db.relationship('ResumeModel', backref='users', lazy=True, overlaps="resumes,users")

@@ -5,3 +5,4 @@ from flask_bcrypt import Bcrypt
 db = SQLAlchemy()
 login_manager = LoginManager()
 bcrypt = Bcrypt()
+ALLOWED_EXTENSIONS = {'pdf', 'docx'}

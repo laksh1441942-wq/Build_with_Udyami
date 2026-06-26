@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, Length, ValidationError
 
-from app.models.user import User
+from app.models.user_model import User
 
 class AuthForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=3, max=25)])

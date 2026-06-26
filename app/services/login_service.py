@@ -1,4 +1,4 @@
-from app.models.user import User
+from app.models.user_model import User
 from app.extention import bcrypt
 
 def authenticate_user(username, password):
