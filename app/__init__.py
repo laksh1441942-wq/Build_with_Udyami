@@ -37,6 +37,10 @@ def create_app():
 
     app.register_blueprint(upload_bp)
 
+    from app.routes.resume import resume_bp
+
+    app.register_blueprint(resume_bp)
+
     with app.app_context():
         db.create_all()
     return app

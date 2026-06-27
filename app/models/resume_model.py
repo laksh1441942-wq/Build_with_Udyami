@@ -10,5 +10,7 @@ class ResumeModel(db.Model):
     file_type = db.Column(db.String)
     file_size = db.Column(db.Integer)
     upload_time = db.Column(db.DateTime, default=db.func.current_timestamp())
+    raw_text = db.Column(db.Text)
+    parsed_json = db.Column(db.Text)
 
     user = db.relationship('User', backref='resume', overlaps="resumes,users")

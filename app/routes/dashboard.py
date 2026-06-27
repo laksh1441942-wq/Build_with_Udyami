@@ -8,4 +8,4 @@ dashboard_bp = Blueprint('dashboard', __name__)
 def dashboard():
     resumes = get_user_resumes()
     print(resumes)  # Debugging line to check the resumes fetched
-    return render_template('dashboard.html', resumes=resumes)   
+    return render_template('dashboard.html', resumes=resumes, )   

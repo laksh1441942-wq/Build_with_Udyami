@@ -46,10 +46,14 @@ def save_resume(file, upload_folder):
         file_path=file_path,
         file_type=file_type,
         file_size=file_size,
-        upload_time=upload_time
+        upload_time=upload_time,
+        raw_text=None,
+        parsed_json=None
     )
     db.session.add(resume)
     db.session.commit()
+    print(db.user_id)
+    return resume
 
 def get_user_resumes():
     return ResumeModel.query.filter_by(user_id=current_user.id).all()
