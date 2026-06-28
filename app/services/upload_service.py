@@ -1,5 +1,7 @@
 import os
 import datetime
+
+from flask import json
 from app.models.resume_model import ResumeModel
 from flask_login import current_user
 from app.extention import db
@@ -28,31 +30,28 @@ def validate_resume_upload(file):
         return False, "File is empty."
     return True, "File is valid for upload."
 
-def save_resume(file, upload_folder):
+def save_resume_file(file, upload_folder):
     filename = secure_filename(file.filename)
-    file_type = file.content_type
-    file_size = len(file.read())
-    file.seek(0)
-
-    upload_time = datetime.datetime.utcnow()
-    
-    os.makedirs(upload_folder, exist_ok=True)
     file_path = os.path.join(upload_folder, f"{current_user.id}_{filename}")
+    os.makedirs(upload_folder, exist_ok=True)
     file.save(file_path)
+
+def save_resume(file, upload_folder, raw_text, parsed_json):
+    filename = secure_filename(file.filename)
+    file_path = os.path.join(upload_folder, f"{current_user.id}_{filename}")
 
     resume = ResumeModel(
         user_id=current_user.id,
         filename=filename,
         file_path=file_path,
-        file_type=file_type,
-        file_size=file_size,
-        upload_time=upload_time,
-        raw_text=None,
-        parsed_json=None
+        file_type=file.content_type,
+        file_size=len(file.read()),
+        upload_time=datetime.datetime.now(),
+        raw_text=str(raw_text),
+        parsed_json=str(parsed_json)
     )
     db.session.add(resume)
     db.session.commit()
-    print(db.user_id)
     return resume
 
 def get_user_resumes():

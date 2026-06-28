@@ -1,11 +1,11 @@
 import os
 from app.extention import db
-from app.services.upload_service import validate_resume_upload
+from app.services.upload_service import save_resume_file, validate_resume_upload
 from app.services.upload_service import save_resume
 from app.services.upload_service import get_user_resumes
 from app.services.upload_service import delete_resume
 
-from flask import Blueprint, request, redirect, url_for, flash, current_app
+from flask import Blueprint, json, request, redirect, url_for, flash, current_app
 from flask_login import login_required
 
 upload_bp = Blueprint('upload', __name__)
@@ -24,10 +24,10 @@ def upload_resume():
         if not is_valid:
             flash(message, 'error')
             return redirect(url_for('dashboard.dashboard'))
-
+        
         upload_folder = current_app.config['UPLOAD_FOLDER']
-        resume = save_resume(file, upload_folder)
-        flash('Resume uploaded successfully!', 'success')
+        resume = save_resume_file(file, upload_folder)
+        print('Resume uploaded successfully!', 'success')
 
         from app.integration.file_extractor import Extractor
         text = None
@@ -39,15 +39,17 @@ def upload_resume():
             text = extractor.extract_docx()
 
         if text:
-            resume.raw_text = text
+            raw_text = text
         
         from app.utils.text_cleaner import text_cleaner
-        cleaned_text = text_cleaner(resume.raw_text)
+        cleaned_text = text_cleaner(raw_text)
 
         from app.services.parser_service import ParserService
         parser = ParserService(cleaned_text)
-        resume.parsed_json = parser.parse_resume()
-        db.session.commit() 
+        parsed_json = parser.parse_resume()
+
+        save_resume(file, upload_folder, raw_text, parsed_json)
+        print('Resume uploaded and parsed successfully!', 'success')
         
     except Exception as e:
         flash('An error occurred while uploading the resume.', 'error')

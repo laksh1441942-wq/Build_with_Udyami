@@ -38,7 +38,7 @@ class ParserService:
         info = self.extract_personal_info()
         sections = self.split_sections()
 
-        return {
+        parsed_data = {
             "name": info["name"],
             "email": info["email"],
             "phone": info["phone"],
@@ -51,6 +51,8 @@ class ParserService:
                 sections.get("certifications", [])
             )
         }
+        print("Parsed Data:", parsed_data)  # Debugging line to check the parsed data
+        return parsed_data
 
     def extract_personal_info(self):
 

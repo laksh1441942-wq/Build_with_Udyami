@@ -13,4 +13,4 @@ class ResumeModel(db.Model):
     raw_text = db.Column(db.Text)
     parsed_json = db.Column(db.Text)
 
-    user = db.relationship('User', backref='resume', overlaps="resumes,users")
+    user = db.relationship('User', back_populates='resumes')
